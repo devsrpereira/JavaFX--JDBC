@@ -12,6 +12,14 @@ target/
 *.iml
 *.ipr
 
+# build folders
+bin/
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+
 ### Eclipse ###
 .apt_generated
 .classpath
@@ -27,7 +35,6 @@ target/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
