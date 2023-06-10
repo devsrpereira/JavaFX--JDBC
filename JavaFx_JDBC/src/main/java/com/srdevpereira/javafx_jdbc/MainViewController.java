@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 public class MainViewController implements Initializable {
 
@@ -33,12 +34,15 @@ public class MainViewController implements Initializable {
 
     @FXML
     public void onMenuItemDepartamentoAction(){
-        loadView2("DepartamentoList.fxml");
+        loadView("DepartamentoList.fxml", (DepartamentoListController controller) ->{
+            controller.setDepartamentoService(new DepartamentoService());
+            controller.updateTableView();
+        });
     }
 
     @FXML
     public void onMenuItemSobreAction(){
-        loadView("SobreView.fxml");
+        loadView("SobreView.fxml", x->{});
     }
 
 
@@ -47,7 +51,7 @@ public class MainViewController implements Initializable {
 
     }
 
-    private synchronized void loadView(String absoluteName){
+    private synchronized <T> void loadView(String absoluteName, Consumer<T> initializeAction){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
             VBox newVBox = loader.load();
@@ -60,30 +64,34 @@ public class MainViewController implements Initializable {
             mainVBox.getChildren().add(mainMenu);
             mainVBox.getChildren().addAll(newVBox.getChildren());
 
-        } catch (IOException e) {
-            Alerts.showAlerts("IO Exception", "Erro na pagina", e.getMessage(), Alert.AlertType.ERROR);
-        }
-    }
+            T controller = loader.getController();
+            initializeAction.accept(controller);
 
-    private synchronized void loadView2(String absoluteName){
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
-            VBox newVBox = loader.load();
-
-            Scene mainScene = MainViewApp.getMainScene();
-            VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
-
-            Node mainMenu = mainVBox.getChildren().get(0);
-            mainVBox.getChildren().clear();
-            mainVBox.getChildren().add(mainMenu);
-            mainVBox.getChildren().addAll(newVBox.getChildren());
-
-            DepartamentoListController controller = loader.getController();
-            controller.setDepartamentoService(new DepartamentoService());
-            controller.updateTableView();
 
         } catch (IOException e) {
             Alerts.showAlerts("IO Exception", "Erro na pagina", e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 }
+//PARTE MANUAL DO MODULO LOAD2
+//    private synchronized void loadView2(String absoluteName){
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
+//            VBox newVBox = loader.load();
+//
+//            Scene mainScene = MainViewApp.getMainScene();
+//            VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
+//
+//            Node mainMenu = mainVBox.getChildren().get(0);
+//            mainVBox.getChildren().clear();
+//            mainVBox.getChildren().add(mainMenu);
+//            mainVBox.getChildren().addAll(newVBox.getChildren());
+//
+//            DepartamentoListController controller = loader.getController();
+//            controller.setDepartamentoService(new DepartamentoService());
+//            controller.updateTableView();
+//
+//        } catch (IOException e) {
+//            Alerts.showAlerts("IO Exception", "Erro na pagina", e.getMessage(), Alert.AlertType.ERROR);
+//        }
+//    }
