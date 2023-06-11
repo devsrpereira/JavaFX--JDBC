@@ -1,6 +1,7 @@
 package com.srdevpereira.javafx_jdbc;
 
 import com.srdevpereira.javafx_jdbc.db.DbException;
+import com.srdevpereira.javafx_jdbc.exceptions.ValidationException;
 import com.srdevpereira.javafx_jdbc.listeners.DataChangeListener;
 import com.srdevpereira.javafx_jdbc.services.DepartmentService;
 import com.srdevpereira.javafx_jdbc.util.Alerts;
@@ -15,9 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class DepartmentFormController implements Initializable {
 
@@ -62,6 +61,9 @@ public class DepartmentFormController implements Initializable {
             notifyDataChangeListeners();
             Utils.currentStage(event).close();
         }
+        catch (ValidationException e){
+            setErrorMessages(e.getErrors());
+        }
         catch (DbException e){
             Alerts.showAlerts("Error não foi possivel salvar", null, e.getMessage(), Alert.AlertType.ERROR);
         }
@@ -78,8 +80,6 @@ public class DepartmentFormController implements Initializable {
         Utils.currentStage(event).close();
     }
 
-
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initializeNodes();
@@ -88,8 +88,19 @@ public class DepartmentFormController implements Initializable {
     private Department getFormData() {
         Department obj = new Department();
 
+        ValidationException exception = new ValidationException("Erro de validação");
+
         obj.setId(Utils.tryParseToInt(txtId.getText()));
+
+        if(txtName.getText() == null || txtName.getText().trim().equals("")){ //.trim elimina espaços vazio no inicio e no final
+            exception.addErrors("name", "O campo não pode ser vazio" );
+        }
         obj.setNome(txtName.getText());
+
+        if(exception.getErrors().size() > 0){
+            throw exception;
+        }
+
 
         return obj;
     }
@@ -107,5 +118,10 @@ public class DepartmentFormController implements Initializable {
         txtName.setText(entity.getNome());
     }
 
-
+    private void setErrorMessages(Map<String, String> error){
+        Set<String> fields = error.keySet();
+        if (fields.contains("name")){
+            labelErrorName.setText(error.get("name"));
+        }
+    }
 }
