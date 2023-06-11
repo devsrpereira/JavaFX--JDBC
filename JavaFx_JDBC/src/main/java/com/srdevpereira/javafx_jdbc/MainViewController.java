@@ -1,6 +1,6 @@
 package com.srdevpereira.javafx_jdbc;
 
-import com.srdevpereira.javafx_jdbc.services.DepartamentoService;
+import com.srdevpereira.javafx_jdbc.services.DepartmentService;
 import com.srdevpereira.javafx_jdbc.util.Alerts;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,8 +34,8 @@ public class MainViewController implements Initializable {
 
     @FXML
     public void onMenuItemDepartamentoAction(){
-        loadView("DepartamentoList.fxml", (DepartamentoListController controller) ->{
-            controller.setDepartamentoService(new DepartamentoService());
+        loadView("DepartmentList.fxml", (DepartmentListController controller) ->{
+            controller.setDepartamentoService(new DepartmentService());
             controller.updateTableView();
         });
     }

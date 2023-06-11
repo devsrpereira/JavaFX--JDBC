@@ -1,15 +1,15 @@
-package com.srdevpereira.javafx_jdbc.model.entities;
+package com.srdevpereira.javafx_jdbc;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Departamento implements Serializable {
+public class Department implements Serializable {
 
     private Integer id;
     private String nome;
 
-    public Departamento(){}
-    public Departamento(Integer id, String nome) {
+    public Department(){}
+    public Department(Integer id, String nome) {
         this.id = id;
         this.nome = nome;
     }
@@ -34,7 +34,7 @@ public class Departamento implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Departamento that = (Departamento) o;
+        Department that = (Department) o;
 
         return Objects.equals(id, that.id);
     }

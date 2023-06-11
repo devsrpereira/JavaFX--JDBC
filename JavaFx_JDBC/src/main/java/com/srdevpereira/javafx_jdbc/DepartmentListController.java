@@ -1,6 +1,6 @@
 package com.srdevpereira.javafx_jdbc;
 
-import com.srdevpereira.javafx_jdbc.services.DepartamentoService;
+import com.srdevpereira.javafx_jdbc.services.DepartmentService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,22 +15,22 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class DepartamentoListController implements Initializable {
+public class DepartmentListController implements Initializable {
 
-    private DepartamentoService service;
-    private ObservableList<Departamento> obsList;
+    private DepartmentService service;
+    private ObservableList<Department> obsList;
 
     @FXML
     private TableView tableViewDepartamentos;
     @FXML
-    private TableColumn<Departamento, Integer> tableColumnId;
+    private TableColumn<Department, Integer> tableColumnId;
     @FXML
-    private TableColumn<Departamento, String> tableColumnNome;
+    private TableColumn<Department, String> tableColumnNome;
     @FXML
     private Button btNovoDpto;
 
 
-    public void setDepartamentoService(DepartamentoService service) {
+    public void setDepartamentoService(DepartmentService service) {
         this.service = service;
     }
 
@@ -38,7 +38,7 @@ public class DepartamentoListController implements Initializable {
         if(service == null){
             throw new IllegalStateException("Service está vazio");
         }
-        List<Departamento> list = service.findAll();
+        List<Department> list = service.findAll();
         obsList = FXCollections.observableArrayList(list);
         tableViewDepartamentos.setItems(obsList);
     }
