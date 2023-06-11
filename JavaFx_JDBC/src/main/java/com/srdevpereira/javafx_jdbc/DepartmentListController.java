@@ -1,5 +1,6 @@
 package com.srdevpereira.javafx_jdbc;
 
+import com.srdevpereira.javafx_jdbc.db.DbIntegrityException;
 import com.srdevpereira.javafx_jdbc.listeners.DataChangeListener;
 import com.srdevpereira.javafx_jdbc.services.DepartmentService;
 import com.srdevpereira.javafx_jdbc.util.Alerts;
@@ -21,6 +22,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class DepartmentListController implements Initializable, DataChangeListener {
@@ -37,6 +39,8 @@ public class DepartmentListController implements Initializable, DataChangeListen
     @FXML
     private TableColumn<Department, Department> tableColumnEDIT;
     @FXML
+    private TableColumn<Department, Department> tableColumnREMOVE;
+    @FXML
     private Button btNovoDpto;
 
 
@@ -52,6 +56,7 @@ public class DepartmentListController implements Initializable, DataChangeListen
         obsList = FXCollections.observableArrayList(list);
         tableViewDepartamentos.setItems(obsList);
         initEditButtons();
+        initRemoveButtons();
     }
 
 
@@ -108,7 +113,7 @@ public class DepartmentListController implements Initializable, DataChangeListen
     private void initEditButtons() {
         tableColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
         tableColumnEDIT.setCellFactory(param -> new TableCell<Department, Department>() {
-            private final Button button = new Button("edit");
+            private final Button button = new Button("editar");
             @Override
             protected void updateItem(Department obj, boolean empty) {
                 super.updateItem(obj, empty);
@@ -122,6 +127,42 @@ public class DepartmentListController implements Initializable, DataChangeListen
                                 obj, "DepartmentForm.fxml",Utils.currentStage(event)));
             }
         });
+    }
+
+    // cria botões para remover departamentos do banco de dados
+    private void initRemoveButtons() {
+        tableColumnREMOVE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+        tableColumnREMOVE.setCellFactory(param -> new TableCell<Department, Department>() {
+            private final Button button = new Button("remover");
+            @Override
+            protected void updateItem(Department obj, boolean empty) {
+                super.updateItem(obj, empty);
+                if (obj == null) {
+                    setGraphic(null);
+                    return;
+                }
+                setGraphic(button);
+                button.setOnAction(event -> removeEntity(obj));
+            }
+        });
+    }
+
+    private void removeEntity(Department obj) {
+        Optional<ButtonType> result = Alerts.showConfirmation("Confirmação", "Realmente deseja excluir?");
+
+        if(result.get() == ButtonType.OK){
+            if(service == null){
+                throw new IllegalStateException("Service estava vazio");
+            }
+            try{
+                service.remove(obj);
+                updateTableView();
+            }
+            catch (DbIntegrityException e){
+                Alerts.showAlerts("Error ao excluir", null, e.getMessage(), Alert.AlertType.ERROR);
+            }
+        }
+
     }
 
 }
