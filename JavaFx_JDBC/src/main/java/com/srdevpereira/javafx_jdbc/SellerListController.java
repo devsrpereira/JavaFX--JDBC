@@ -93,27 +93,27 @@ public class SellerListController implements Initializable, DataChangeListener {
     }
 
     private void createDialogForm(Seller obj, String absolutName, Stage parentStage){
-//        try{
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource(absolutName));
-//            Pane pane = loader.load();
-//
-//            SellerFormController controller = loader.getController();
-//            controller.setSeller(obj);
-//            controller.setSellerService(new SellerService());
-//            controller.subscribeDataChangeListener(this);
-//            controller.updateFormData();
-//
-//            Stage dialogStage = new Stage();
-//            dialogStage.setTitle("Entre com os dados do Vendedor");
-//            dialogStage.setScene(new Scene(pane));
-//            dialogStage.setResizable(false); //não permite dimencionar a janela
-//            dialogStage.initOwner(parentStage);
-//            dialogStage.initModality(Modality.WINDOW_MODAL); //impede a transição de janela com ela aberta
-//            dialogStage.showAndWait();
-//        }
-//        catch (IOException e){
-//            Alerts.showAlerts("IO Exception", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
-//        }
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(absolutName));
+            Pane pane = loader.load();
+
+            SellerFormController controller = loader.getController();
+            controller.setSeller(obj);
+            controller.setSellerService(new SellerService());
+            controller.subscribeDataChangeListener(this);
+            controller.updateFormData();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Entre com os dados do Vendedor");
+            dialogStage.setScene(new Scene(pane));
+            dialogStage.setResizable(false); //não permite dimencionar a janela
+            dialogStage.initOwner(parentStage);
+            dialogStage.initModality(Modality.WINDOW_MODAL); //impede a transição de janela com ela aberta
+            dialogStage.showAndWait();
+        }
+        catch (IOException e){
+            Alerts.showAlerts("IO Exception", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     @Override
